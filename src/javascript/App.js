@@ -1,3 +1,4 @@
 import './../scss/app.scss';
 
-console.log('yeah wow');
+console.log('yeah sick');
+
