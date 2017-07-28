@@ -18,6 +18,12 @@ module.exports = function(env) {
         // the entry point of our app
       ]
     },
+    // stupid fix for Kraken bugs
+    node: {
+      fs: 'empty',
+      net: 'empty',
+      tls: 'empty'
+    },
     devServer: {
       hot: true, // enable HMR on the server
       inline: true,
