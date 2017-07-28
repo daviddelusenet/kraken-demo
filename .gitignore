@@ -5,3 +5,5 @@ dist/css/**
 dist/js/**
 css/**
 js/**
+
+npm-debug.log
