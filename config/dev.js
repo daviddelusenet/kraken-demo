@@ -2,12 +2,13 @@ const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const baseConfig = require('./base');
 const { resolve } = require('path');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 module.exports = function(env) {
   return webpackMerge(baseConfig(), {
     entry: {
       app: [
-        'webpack-dev-server/client?http://localhost:3000',
+        'webpack-dev-server/client?http://localhost:3100',
         // bundle the client for webpack-dev-server
         // and connect to the provided endpoint
         'webpack/hot/only-dev-server',
@@ -22,7 +23,7 @@ module.exports = function(env) {
       inline: true,
       contentBase: resolve(__dirname, './../dist'), // `__dirname` is root of the project
       publicPath: '/js',
-      port: 3000
+      port: 3100
     },
     devtool: 'inline-source-map',
     module: {
@@ -54,10 +55,26 @@ module.exports = function(env) {
       ]
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      new BrowserSyncPlugin({
+        // BrowserSync options
+        // browse to http://localhost:3000/ during development,
+        host: 'localhost',
+        port: 3000,
+        // proxy the Webpack Dev Server endpoint
+        // (which should be serving on http://localhost:3100/)
+        // through BrowserSync
+        proxy: 'http://localhost:3100/'
+      },
+      // plugin options
+      {
+        // prevent BrowserSync from reloading the page
+        // and let Webpack Dev Server take care of this
+        reload: false
+      }),
       // enable HMR globally
-      new webpack.NamedModulesPlugin()
+      new webpack.HotModuleReplacementPlugin(),
       // prints more readable module names in the browser console on HMR updates
+      new webpack.NamedModulesPlugin()
     ]
   })
 };
